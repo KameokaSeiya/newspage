@@ -1,6 +1,8 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.utils import formatdate
+from bs4 import BeautifulSoup
+import requests
 import json 
 import schedule
 import time
@@ -34,15 +36,37 @@ def job():
     
     TO_ADDRESS = 's.kameoka.227@ms.saitama-u.ac.jp '
     BCC = ''
-    SUBJECT = '自動実行環境構築練習'
-    BODY = 'これは練習です。'
+    SUBJECT = 'webpage 更新'
+    BODY = '変化なし'
     msg = create_message(FROM_ADDRESS, TO_ADDRESS, BCC, SUBJECT, BODY)
     send(FROM_ADDRESS, TO_ADDRESS, msg, MY_PASSWORD)
     
+def detect_update():
+    url='http://www.saitama-u.ac.jp/'
+    res=requests.get(url)
+
+    soup=BeautifulSoup(res.text,'html.parser')
+    new_elem=str(soup.select('.mtx.line.news'))
+
+    try:
+        with open('old_elem.txt')as f:
+            old_elem=f.read()
+    except:
+        old_elem=''
+
+    if new_elem==old_elem:
+        print('変化なし')
+        return False
+    else:
+        with open('old_elem.txt','w')as f:
+            f.write(new_elem)
+        print('webページが更新された') 
+        job()
+        return True
     
 def main():
-    schedule.every(1).minutes.do(job)
-    
+    schedule.every(3).hours.do(detect_update)
+    print('処理を開始')
     while True:
         schedule.run_pending()
         time.sleep(1)
