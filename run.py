@@ -56,12 +56,12 @@ def detect_update():
 
     if new_elem==old_elem:
         print('変化なし')
+        job()
         return False
     else:
         with open('old_elem.txt','w')as f:
             f.write(new_elem)
         print('webページが更新された') 
-        job()
         return True
     
 def main():
