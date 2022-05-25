@@ -61,7 +61,7 @@ def detect_update():
     else:
         with open('old_elem.txt','w')as f:
             f.write(new_elem)
-        print('webページが更新された') 
+        print('webページが更新された')
         return True
     
 def main():
