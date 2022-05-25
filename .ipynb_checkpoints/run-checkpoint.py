@@ -37,7 +37,7 @@ def job():
     TO_ADDRESS = 's.kameoka.227@ms.saitama-u.ac.jp '
     BCC = ''
     SUBJECT = 'webpage 更新'
-    BODY = '変化なし'
+    BODY = '新たなニュースが発行されました．'
     msg = create_message(FROM_ADDRESS, TO_ADDRESS, BCC, SUBJECT, BODY)
     send(FROM_ADDRESS, TO_ADDRESS, msg, MY_PASSWORD)
     
@@ -56,16 +56,16 @@ def detect_update():
 
     if new_elem==old_elem:
         print('変化なし')
-        job()
         return False
     else:
         with open('old_elem.txt','w')as f:
             f.write(new_elem)
         print('webページが更新された')
+        job()
         return True
     
 def main():
-    schedule.every(30).seconds.do(detect_update)
+    schedule.every(3).hours.do(detect_update)
     print('処理を開始')
     while True:
         schedule.run_pending()
