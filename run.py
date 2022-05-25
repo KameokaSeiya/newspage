@@ -65,7 +65,7 @@ def detect_update():
         return True
     
 def main():
-    schedule.every(3).hours.do(detect_update)
+    schedule.every(10).seconds.do(detect_update)
     print('処理を開始')
     while True:
         schedule.run_pending()
